@@ -25,7 +25,7 @@ services:
       - PGID=1000
     volumes:
       - ../../docker-data/jackett:/config
-      - /mnt/pool/storage/downloads/jackett:/downloads
+      - /mnt/pool/storage/downloads:/downloads
     ports:
       - 9117:9117
 
@@ -95,7 +95,7 @@ services:
       - PGID=1000
     volumes:
       - ../../docker-data/radarr:/config
-      - /mnt/pool/storage/downloads/torrent/radarr:/downloads
+      - /mnt/pool/storage/downloads/torrent:/downloads
       - /mnt/pool/storage/movies:/movies
     ports:
       - 7878:7878
@@ -112,7 +112,7 @@ services:
       - PGID=1000
     volumes:
       - ../../docker-data/sonarr:/config
-      - /mnt/pool/storage/downloads/torrent/sonarr:/downloads
+      - /mnt/pool/storage/downloads/torrent:/downloads
       - /mnt/pool/storage/anime:/anime
       - /mnt/pool/storage/tv_shows:/tv_shows
     ports:
