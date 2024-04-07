@@ -1,0 +1,153 @@
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - WEBUI_PORT=8080
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ../../docker-data/qbittorrent:/config
+      - /mnt/pool/storage/downloads/torrent:/downloads
+    ports:
+      - 8080:8080
+      - 62609:62609
+
+  jackett:
+    image: ghcr.io/linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ../../docker-data/jackett:/config
+      - /mnt/pool/storage/downloads/jackett:/downloads
+    ports:
+      - 9117:9117
+
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /mnt/pool/storage/movies:/movies
+      - /mnt/pool/storage/tv_shows:/tv_shows
+      - /mnt/pool/storage/anime:/anime
+      - ../../docker-data/bazarr:/config
+    ports:
+      - 6767:6767
+
+  overseerr:
+    image: sctx/overseerr
+    container_name: overseerr
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+    environment:
+      - TZ=America/Sao_Paulo
+      - PORT=5055
+    volumes:
+      - ../../docker-data/overseerr:/app/config
+    ports:
+      - 5055:5055
+
+  prowlarr:
+    image: ghcr.io/hotio/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    depends_on:
+      - flaresolverr
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ../../docker-data/prowlarr:/config
+    ports:
+      - 9696:9696
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    restart: unless-stopped
+    volumes:
+      - ../../docker-data/flaresolverr:/config
+    ports:
+      - '8191:8191'
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ../../docker-data/sabnzbd:/config
+      - /mnt/pool/storage/downloads/sabnzbd:/downloads
+      - /mnt/pool/storage/downloads/sabnzbd/incomplete:/incomplete-downloads
+    ports:
+      - 6789:6789
+
+  radarr:
+    image: ghcr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ../../docker-data/radarr:/config
+      - /mnt/pool/storage/downloads/radarr:/downloads
+      - /mnt/pool/storage/movies:/movies
+    ports:
+      - 7878:7878
+
+  sonarr:
+    image: ghcr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ../../docker-data/sonarr:/config
+      - /mnt/pool/storage/downloads/sonarr:/downloads
+      - /mnt/pool/storage/anime:/anime
+      - /mnt/pool/storage/tv_shows:/tv_shows
+    ports:
+      - 8989:8989
+
+  plex:
+    image: plexinc/pms-docker:latest
+    container_name: plex
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+      - PLEX_UID=1000
+      - PLEX_GID=1000
+    volumes:
+      - ../../docker-data/plex/config:/config
+      - ../../docker-data/plex/data:/data
+      - ../../docker-data/plex/transcode:/transcode
+      - /mnt/pool/storage/anime:/media/anime
+      - /mnt/pool/storage/tv_shows:/media/tv_shows
+      - /mnt/pool/storage/movies:/media/movies
+    network_mode: host
