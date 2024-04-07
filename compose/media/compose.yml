@@ -83,21 +83,6 @@ services:
     ports:
       - '8191:8191'
 
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: sabnzbd
-    restart: unless-stopped
-    environment:
-      - TZ=America/Sao_Paulo
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - ../../docker-data/sabnzbd:/config
-      - /mnt/pool/storage/downloads/sabnzbd:/downloads
-      - /mnt/pool/storage/downloads/sabnzbd/incomplete:/incomplete-downloads
-    ports:
-      - 6789:6789
-
   radarr:
     image: ghcr.io/linuxserver/radarr:latest
     container_name: radarr
@@ -106,8 +91,8 @@ services:
       - qbittorrent
     environment:
       - TZ=America/Sao_Paulo
-      - PUID=1000
-      - PGID=1000
+      - PUID=100000
+      - PGID=100000
     volumes:
       - ../../docker-data/radarr:/config
       - /mnt/pool/storage/downloads/radarr:/downloads
@@ -123,8 +108,8 @@ services:
       - qbittorrent
     environment:
       - TZ=America/Sao_Paulo
-      - PUID=1000
-      - PGID=1000
+      - PUID=100000
+      - PGID=100000
     volumes:
       - ../../docker-data/sonarr:/config
       - /mnt/pool/storage/downloads/sonarr:/downloads
@@ -150,4 +135,6 @@ services:
       - /mnt/pool/storage/anime:/media/anime
       - /mnt/pool/storage/tv_shows:/media/tv_shows
       - /mnt/pool/storage/movies:/media/movies
+    ports:
+      - 32400:32400
     network_mode: host
