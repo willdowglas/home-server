@@ -91,8 +91,8 @@ services:
       - qbittorrent
     environment:
       - TZ=America/Sao_Paulo
-      - PUID=100000
-      - PGID=100000
+      - PUID=1000
+      - PGID=1000
     volumes:
       - ../../docker-data/radarr:/config
       - /mnt/pool/storage/downloads/radarr:/downloads
@@ -108,8 +108,8 @@ services:
       - qbittorrent
     environment:
       - TZ=America/Sao_Paulo
-      - PUID=100000
-      - PGID=100000
+      - PUID=1000
+      - PGID=1000
     volumes:
       - ../../docker-data/sonarr:/config
       - /mnt/pool/storage/downloads/sonarr:/downloads
